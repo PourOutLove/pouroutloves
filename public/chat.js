@@ -137,7 +137,7 @@ async function sendMessage() {
     // Remove typing class after animation completes
     setTimeout(() => {
       assistantMessageEl.classList.remove('typing');
-    }, responseText.length * 50); // Match animation duration (0.05s per character)
+    }, responseText.length * 20); // Match animation duration (0.02s per character)
 
     // Add completed response to chat history
     chatHistory.push({ role: "assistant", content: responseText });
