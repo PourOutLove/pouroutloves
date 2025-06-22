@@ -141,6 +141,20 @@
         80%, 100% { content: ''; }
       }
 
+      /* Typing animation for assistant messages */
+      .assistant-message.typing {
+        overflow: hidden;
+        display: inline-block;
+        animation: typing-effect steps(var(--text-length)) forwards;
+        animation-duration: calc(var(--text-length) * 0.05s);
+        white-space: nowrap;
+      }
+
+      @keyframes typing-effect {
+        from { width: 0; }
+        to { width: 100%; }
+      }
+
       footer {
         margin-top: 1rem;
         text-align: center;
