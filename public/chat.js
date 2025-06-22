@@ -67,8 +67,9 @@ async function sendMessage() {
   try {
     // Create new assistant response element
     const assistantMessageEl = document.createElement("div");
-    assistantMessageEl.className = "message assistant-message typing";
-    assistantMessageEl.innerHTML = "<p></p>";
+    assistantMessageEl.className = "message assistant-message";
+    const pElement = document.createElement("p");
+    assistantMessageEl.appendChild(pElement);
     chatMessages.appendChild(assistantMessageEl);
 
     // Scroll to bottom
@@ -94,6 +95,25 @@ async function sendMessage() {
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
     let responseText = "";
+    let words = [];
+    let currentWordIndex = 0;
+
+    function animateWords() {
+      if (currentWordIndex < words.length) {
+        const span = document.createElement("span");
+        span.className = "word-typing";
+        span.textContent = words[currentWordIndex] + " ";
+        pElement.appendChild(span);
+
+        // Trigger animation
+        setTimeout(() => {
+          span.classList.add("visible");
+        }, 10); // Small delay to ensure DOM update
+
+        currentWordIndex++;
+        setTimeout(animateWords, 100); // 0.1s per word
+      }
+    }
 
     while (true) {
       const { done, value } = await reader.read();
@@ -113,17 +133,11 @@ async function sendMessage() {
           if (jsonData.response) {
             // Append new content to existing text
             responseText += jsonData.response;
-            const pElement = assistantMessageEl.querySelector("p");
-            pElement.textContent = responseText;
+            words = responseText.trim().split(/\s+/);
+            pElement.style.setProperty('--word-count', words.length);
 
-            // Update text length for typing animation
-            const textLength = responseText.length;
-            assistantMessageEl.style.setProperty('--text-length', textLength);
-
-            // Force reflow to restart animation
-            assistantMessageEl.classList.remove('typing');
-            void assistantMessageEl.offsetWidth; // Trigger reflow
-            assistantMessageEl.classList.add('typing');
+            // Start or continue word animation
+            animateWords();
 
             // Scroll to bottom
             chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -133,11 +147,6 @@ async function sendMessage() {
         }
       }
     }
-
-    // Remove typing class after animation completes
-    setTimeout(() => {
-      assistantMessageEl.classList.remove('typing');
-    }, responseText.length * 20); // Match animation duration (0.02s per character)
 
     // Add completed response to chat history
     chatHistory.push({ role: "assistant", content: responseText });
