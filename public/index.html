@@ -122,10 +122,23 @@
         margin-bottom: 1rem;
         font-style: italic;
         color: var(--text-light);
+        position: relative;
       }
 
       .typing-indicator.visible {
         display: block;
+      }
+
+      .typing-indicator::after {
+        content: '';
+        animation: typing 1.5s infinite;
+      }
+
+      @keyframes typing {
+        0%, 20% { content: '.'; }
+        40% { content: '..'; }
+        60% { content: '...'; }
+        80%, 100% { content: ''; }
       }
 
       footer {
@@ -153,7 +166,7 @@
       </div>
 
       <div class="typing-indicator" id="typing-indicator">
-         AI is thinking...
+         AI is thinking
       </div>
 
       <div class="message-input">
@@ -168,7 +181,7 @@
     </div>
 
     <footer>
-      <p>emosnel AI &copy; 2025</p>
+      <p>emosnel AI © 2025</p>
     </footer>
 
     <!-- Chat app script -->
