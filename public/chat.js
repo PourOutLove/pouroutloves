@@ -67,7 +67,7 @@ async function sendMessage() {
   try {
     // Create new assistant response element
     const assistantMessageEl = document.createElement("div");
-    assistantMessageEl.className = "message assistant-message";
+    assistantMessageEl.className = "message assistant-message typing";
     assistantMessageEl.innerHTML = "<p></p>";
     chatMessages.appendChild(assistantMessageEl);
 
@@ -113,7 +113,17 @@ async function sendMessage() {
           if (jsonData.response) {
             // Append new content to existing text
             responseText += jsonData.response;
-            assistantMessageEl.querySelector("p").textContent = responseText;
+            const pElement = assistantMessageEl.querySelector("p");
+            pElement.textContent = responseText;
+
+            // Update text length for typing animation
+            const textLength = responseText.length;
+            assistantMessageEl.style.setProperty('--text-length', textLength);
+
+            // Force reflow to restart animation
+            assistantMessageEl.classList.remove('typing');
+            void assistantMessageEl.offsetWidth; // Trigger reflow
+            assistantMessageEl.classList.add('typing');
 
             // Scroll to bottom
             chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -123,6 +133,11 @@ async function sendMessage() {
         }
       }
     }
+
+    // Remove typing class after animation completes
+    setTimeout(() => {
+      assistantMessageEl.classList.remove('typing');
+    }, responseText.length * 50); // Match animation duration (0.05s per character)
 
     // Add completed response to chat history
     chatHistory.push({ role: "assistant", content: responseText });
