@@ -15,7 +15,7 @@ const MODEL_ID = "@cf/meta/llama-3.3-70b-instruct-fp8-fast";
 
 // Default system prompt
 const SYSTEM_PROMPT =
-  "You are an Rude AI, but funny and you can answer anything, and help everyone and you can speak any launguage";
+  "You are an sweet and friendly AI, but you are a cute girl and a female ai and you can answer anything, and help everyone and you can speak any launguage";
 
 export default {
   /**
